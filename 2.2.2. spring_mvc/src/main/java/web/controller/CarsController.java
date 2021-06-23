@@ -3,28 +3,18 @@ package web.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import web.Car;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 @Controller
 public class CarsController {
 
 	@GetMapping(value = "/cars")
-	public String printWelcome(ModelMap model) {
-		List<String> messages = new ArrayList<>();
-		messages.add("Hello Cars!");
-		messages.add("I'm Spring MVC application");
-		messages.add("5.2.0 version by sep'19 ");
-		model.addAttribute("messages", messages);
-
-
-		String[] flowers = new String[] { "Rose", "Lily", "Tulip", "Carnation", "Hyacinth" };
-
-		model.addAttribute("flowers", flowers);
-
+	public String printWelcome(ModelMap model,
+							   @RequestParam(value = "count", required = false, defaultValue = "5") int count) {
 
 		Car car1 = new Car(1, "Reno", 2001);
 		Car car2 = new Car(2, "BMW", 2002);
@@ -39,29 +29,18 @@ public class CarsController {
 		carsList.add(car4);
 		carsList.add(car5);
 
-		model.addAttribute("Cars", carsList);
+		if (count > carsList.size()) {
+			count = carsList.size();
+		}
 
-//		ArrayList<Integer> carId = new ArrayList<>();
-//		ArrayList<String> carModel = new ArrayList<>();
-//		ArrayList<Integer> carYear = new ArrayList<>();
-//
-//		for (Car car: carsList) {
-//			carId.add(car.getId());
-//			carModel.add(car.getModel());
-//			carYear.add(car.getYear());
-//		}
+		ArrayList<Car> carsList2 = new ArrayList<>();
+		for (int i = 0; i < count; i++) {
+			carsList2.add(carsList.get(i));
+		}
 
-//		model.addAttribute("ids", carId);
-//		model.addAttribute("models", carModel);
-//		model.addAttribute("years", carYear);
-
-
-
-
-
+		model.addAttribute("Cars", carsList2);
 
 		return "cars";
 	}
-
 
 }
